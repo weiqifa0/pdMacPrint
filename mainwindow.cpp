@@ -189,7 +189,7 @@ void MainWindow::QPcode_2( QPrinter *printer,QPainter *painter,QByteArray &text,
         //打印文字
         painter->restore();//回到save的位置
         painter->save();//缓存当前的坐标状态
-        painter->translate(D_LEFT_MARGIN,D_TWODIMENSION_SIZE+D_UP_MARGIN+D_PITURE_B_TEXT);
+        painter->translate(D_TEXT_LEFT_MARGIN,D_TWODIMENSION_SIZE+D_UP_MARGIN+D_PITURE_B_TEXT);
         pen.setColor(QColor("#ff00ff"));
         pen.setWidth(1);
         painter->setPen(pen);
@@ -226,7 +226,7 @@ void MainWindow::QPcode_2( QPrinter *printer,QPainter *painter,QByteArray &text,
         //打印文字
         painter->restore();//回到save的位置
         painter->save();//缓存当前的坐标状态
-        painter->translate(D_LEFT_MARGIN+D_TWODIMENSION_SIZE+D_TWODIMENSION_INTERVAL,D_TWODIMENSION_SIZE+D_UP_MARGIN+D_PITURE_B_TEXT);
+        painter->translate(D_TEXT_LEFT_MARGIN+D_TWODIMENSION_SIZE+D_TWODIMENSION_INTERVAL,D_TWODIMENSION_SIZE+D_UP_MARGIN+D_PITURE_B_TEXT);
         pen.setColor(QColor("#ff00ff"));
         pen.setWidth(1);
         painter->setPen(pen);

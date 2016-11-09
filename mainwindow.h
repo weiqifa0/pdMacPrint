@@ -70,11 +70,12 @@ private:
     #define D_MARGIN_VALUE 0
     #define D_DPI 25.5 //毫米和像素的转换
     #define D_PARAMETER 3.775//差值，乘以这个差值才是正确的mm
-    #define D_TWODIMENSION_SIZE 12*D_PARAMETER //定义打印二维码图像大小
-    #define D_LEFT_MARGIN 1.0*D_PARAMETER  //左边距2.29mm
-    #define D_UP_MARGIN 0.5*D_PARAMETER //上边距
-    #define D_TWODIMENSION_INTERVAL 5.0*D_PARAMETER //左右二维码的中间间隔
-    #define D_PITURE_B_TEXT 1.7*D_PARAMETER //二维码和文字的距离
+    #define D_TWODIMENSION_SIZE 10.3*D_PARAMETER //定义打印二维码图像大小
+    #define D_LEFT_MARGIN 2.0*D_PARAMETER  //左边距2.29mm
+    #define D_TEXT_LEFT_MARGIN 0.7*D_PARAMETER  //文字的左边距2.29mm
+    #define D_UP_MARGIN 1.5*D_PARAMETER //上边距
+    #define D_TWODIMENSION_INTERVAL 6.5*D_PARAMETER //左右二维码的中间间隔
+    #define D_PITURE_B_TEXT 1.5*D_PARAMETER //二维码和文字的距离
     #define D_TEXT_SIZE 4//二维码下面的字体大小
     /***************************************
      * 单张规格：
