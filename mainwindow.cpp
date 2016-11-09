@@ -12,6 +12,8 @@
 #include <QDateTime>
 #include <QProcess>
 #include <QString>
+#include <QMessageBox>
+#include <QTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -470,23 +472,35 @@ char * HexToString(char *str,unsigned char Hex[],unsigned char lenth)
 
 void MainWindow::on_print_button_clicked()
 {
+   /*##################输入数据判断###################*/
+   QTime t;
+   t= QTime::currentTime();
+   qsrand(t.msec()+t.second()*1000);
    QByteArray readCmdMac="DD54";
-   static int pTwoFlag=0;
    static int macValue=0x10000001;//初始值
-   QString sValue=ui->textEdit->toPlainText();
+   QString sValue=ui->textEdit->text();
    qDebug()<<sValue;
-   //QByteArray iValue=sValue.toLatin1().toHex();//QString 转成QByteArray
-   //qDebug()<<iValue;
-   //readCmdMac.append(iValue);
+   if((sValue.length()<12))
+   {
+       QMessageBox::warning(this,tr("ERROR"),tr("MAC地址长度有误"));
+       return;
+   }
+   else if(!((sValue.contains("DD54"))||(sValue.contains("dd54"))))
+   {
+       QMessageBox::warning(this,tr("ERROR"),tr("MAC地址前面没有DD54"));
+       return;
+   }
+
+   QString stringMacValue=sValue.right(8);
+   qDebug()<<stringMacValue;
    bool ok;
-   macValue=sValue.toLong(&ok,16);
+   macValue=stringMacValue.toLong(&ok,16);
    qDebug()<<macValue;
    qDebug("%x\r\n",macValue);
-   int imacStep=ui->textEdit_2->toPlainText().toInt();
+   int imacStep=ui->textEdit_2->text().toInt();
    qDebug()<<imacStep;
-   int imacCount=ui->textEdit_3->toPlainText().toInt();
+   int imacCount=ui->textEdit_3->text().toInt();
    qDebug()<<imacCount;
-   //return;
 for(int imac=0;imac<imacCount;imac++)
 {
     //第一次数据##########################################
@@ -494,23 +508,57 @@ for(int imac=0;imac<imacCount;imac++)
     qDebug()<<QString::number(macValue,16).toUpper();
     readCmdMac.append(QString::number(macValue,16).toUpper().toLatin1());
     qDebug()<<readCmdMac;
-
-    ui->rencode_lineEdit->setText(readCmdMac);
-    this->rencode_text=readCmdMac;
+    {// 生成随机数######################
+           int intQrand=qrand()%65535;
+           QString stringQrand=QString::number(intQrand,16).toUpper();
+           QString stringQrandS;
+           switch(stringQrand.length())
+           {
+               case 0: stringQrandS="0000";break;
+               case 1: stringQrandS="000"+stringQrand;break;
+               case 2: stringQrandS="00"+stringQrand;break;
+               case 3: stringQrandS="0"+stringQrand;break;
+               case 4: stringQrandS=stringQrand;break;
+               default: stringQrandS=stringQrand; qDebug()<<"over 65535"; break;
+           }
+           qDebug()<<stringQrandS;
+    QByteArray qbyteMacAndQrad=readCmdMac.append(stringQrandS.toLatin1());
+    ui->rencode_lineEdit->setText(qbyteMacAndQrad);
+    this->rencode_text=qbyteMacAndQrad;
+    qDebug()<<this->rencode_text;
+    }
     //在PC界面显示二维码
     QRcode_Encode(this->rencode_text);
     log_output(tr("-->1:")+readCmdMac);
-    ui->print_button->setText("再次读取一次，并打印");
-    macValue+=imacStep;
+
     //第二次数据##########################################
+    macValue+=imacStep;
     readCmdMac="DD54";
     readCmdMac.append(QString::number(macValue,16).toUpper().toLatin1());
     qDebug()<<readCmdMac;
-    ui->rencode_lineEdit_2->setText(readCmdMac);
-    this->rencode_text_2=readCmdMac;
+
+    {// 生成随机数######################
+               int intQrand=qrand()%65535;
+               QString stringQrand=QString::number(intQrand,16).toUpper();
+               QString stringQrandS;
+               switch(stringQrand.length())
+               {
+                   case 0: stringQrandS="0000";break;
+                   case 1: stringQrandS="000"+stringQrand;break;
+                   case 2: stringQrandS="00"+stringQrand;break;
+                   case 3: stringQrandS="0"+stringQrand;break;
+                   case 4: stringQrandS=stringQrand;break;
+                   default: stringQrandS=stringQrand; qDebug()<<"over 65535"; break;
+               }
+               qDebug()<<stringQrandS;
+    QByteArray qbyteMacAndQrad=readCmdMac.append(stringQrandS.toLatin1());
+    ui->rencode_lineEdit_2->setText(qbyteMacAndQrad);
+    this->rencode_text_2=qbyteMacAndQrad;
+    qDebug()<<this->rencode_text_2;
+    }
     //在PC界面显示二维码
     QRcode_Encode_2(this->rencode_text_2);
-    log_output(tr("-->:")+readCmdMac);
+    log_output(tr("-->2:")+readCmdMac);
     ui->print_button->setText("打印");
     macValue+=imacStep;
     //二维码打印///////////////////////////////////////////////////
@@ -545,6 +593,7 @@ for(int imac=0;imac<imacCount;imac++)
         log_output(tr("[单张]打印第 ")+QString::number(prinCount)+tr(" 次"));
         QPcode(&printer,&painter,this->rencode_text);
     }
+    ui->textEdit->setText("DD54"+QString::number(macValue,16));
 }
 }
 //二维码显示
