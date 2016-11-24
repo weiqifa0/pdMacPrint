@@ -77,6 +77,17 @@ private:
     #define D_TWODIMENSION_INTERVAL 6.5*D_PARAMETER //左右二维码的中间间隔
     #define D_PITURE_B_TEXT 1.5*D_PARAMETER //二维码和文字的距离
     #define D_TEXT_SIZE 4//二维码下面的字体大小
+
+    /*汉字打印设置*/
+    #define D_CHINESE_LEFT_MARGIN 0.3*D_PARAMETER //汉字的左边距
+    #define D_CHINESE_UP_MARGIN 1.1*D_PARAMETER //汉字的上边距边距
+    #define D_CHINESE_TWODIMENSION_INTERVAL 6.5*D_PARAMETER //左右二维码的中间间隔
+    #define D_CHINESE_SIZE 4
+
+
+    /*提取MAC地址里面的颜色值位置*/
+    #define C_MAC_STRING 6
+
     /***************************************
      * 单张规格：
      * 上边距：1.86mm   左边距：1.67mm  二维码到文字的距离：1.7mm 二维码大小：12mmx12mm
@@ -94,7 +105,7 @@ private:
 
     #define READ_MAC_CMD "nrfjprog.exe --memrd 0x100000a3 --n 7"
     #define RESET_CMD "nrfjprog.exe -f NRF52 --reset"
-    #define EXE_NAME "缇铭科技量产工具V1.1"
+    #define EXE_NAME "缇铭科技MAC打印工具V1.1.2"
     #define CMD_OFFSIZE 4
 };
 

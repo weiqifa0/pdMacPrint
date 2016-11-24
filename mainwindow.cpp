@@ -42,7 +42,8 @@ void MainWindow::InitStyle()
     this->setWindowTitle(EXE_NAME);
 }
 
-
+QString PRINT_FILE_NAME= QDateTime::currentDateTime ().toString ("yyyyMMddHHmmss");
+QFile file("TS102_ALLPRINT_MAC_"+PRINT_FILE_NAME+".txt");
 void MainWindow::InitForm()
 {
    this->rencode_text  ="";
@@ -53,11 +54,7 @@ void MainWindow::InitForm()
    //设置调试窗口的字体大小
    ui->plainTextEdit->setFont(QFont( "宋体" , 10 ,  QFont::Normal) );
    log_output(tr("启动..."));
-   QFile file("macAdress.txt");
-   if(!file.open(QIODevice::WriteOnly|QIODevice::Append|QIODevice::Text))
-   {
-        qDebug()<<"open file failure";
-   }
+
    if(ui->checkBox->isChecked())
    {
        ui->rencode_lineEdit_2->setVisible(true);
@@ -134,7 +131,7 @@ void MainWindow::QPcode( QPrinter *printer,QPainter *painter,QByteArray &text)
         painter->end();
         point = NULL;
         //把mac地址保存到文件里面
-        QFile file("macAdress.txt");
+        //QFile file("macAdress.txt");
         if(file.open(QIODevice::WriteOnly|QIODevice::Append|QIODevice::Text))
         {
             QTextStream stream( &file );
@@ -158,7 +155,10 @@ void MainWindow::QPcode_2( QPrinter *printer,QPainter *painter,QByteArray &text,
     QFont font;
 
     printer->logicalDpiX();
-
+    //打印MAC地址里面颜色值
+    QString sQpcodeText,sQpcodeText_2;
+    sQpcodeText.prepend(text);sQpcodeText_2.prepend(text_2);
+    qDebug()<<"QP:"+sQpcodeText.mid(C_MAC_STRING,1)+sQpcodeText_2.mid(C_MAC_STRING,1);
     QRcode *qrcode = QRcode_encodeString(text.data(), 1, QR_ECLEVEL_L, QR_MODE_8, 1);
     if(NULL != qrcode) {
         painter->begin(printer);
@@ -198,6 +198,37 @@ void MainWindow::QPcode_2( QPrinter *printer,QPainter *painter,QByteArray &text,
         font.setFamily("新宋体");
         painter->setFont(font);
         painter->drawText(0,0,text);
+        //打印汉字
+        painter->restore();//回到save的位置
+        painter->save();//缓存当前的坐标状态
+        painter->translate(D_CHINESE_LEFT_MARGIN,D_CHINESE_UP_MARGIN);
+        pen.setColor(QColor("#ff00ff"));
+        pen.setWidth(1);
+        painter->setPen(pen);
+        font.setBold(false);
+        font.setPointSize(D_CHINESE_SIZE);//设置字体大小
+        font.setFamily("新宋体");
+        painter->setFont(font);
+        if(sQpcodeText.mid(C_MAC_STRING,1)=="3")
+        {
+            painter->drawText(0,0,"蓝");
+        }
+        else if(sQpcodeText.mid(C_MAC_STRING,1)=="1")
+        {
+            painter->drawText(0,0,"粉");
+        }
+        else if(sQpcodeText.mid(C_MAC_STRING,1)=="2")
+        {
+            painter->drawText(0,0,"黄");
+        }
+        else if(sQpcodeText.mid(C_MAC_STRING,1)=="4")
+        {
+            painter->drawText(0,0,"绿");
+        }
+        else
+        {
+            painter->drawText(0,0,"ERROR");
+        }
 
         qDebug("printer.x %d printer.y %d",printer->pageRect().x(),printer->pageRect().y());
         qDebug("printer.w %d printer.h %d",printer->pageRect().width(),printer->pageRect().height());
@@ -235,11 +266,42 @@ void MainWindow::QPcode_2( QPrinter *printer,QPainter *painter,QByteArray &text,
         font.setFamily("新宋体");
         painter->setFont(font);
         painter->drawText(0,0,text_2);
+        //打印汉字
+        painter->restore();//回到save的位置
+        painter->save();//缓存当前的坐标状态
+        painter->translate(D_CHINESE_LEFT_MARGIN+D_TWODIMENSION_SIZE+D_TWODIMENSION_INTERVAL,D_CHINESE_UP_MARGIN);
+        pen.setColor(QColor("#ff00ff"));
+        pen.setWidth(1);
+        painter->setPen(pen);
+        font.setBold(false);
+        font.setPointSize(D_CHINESE_SIZE);//设置字体大小
+        font.setFamily("新宋体");
+        painter->setFont(font);
+        if(sQpcodeText.mid(C_MAC_STRING,1)=="3")
+        {
+            painter->drawText(0,0,"蓝");
+        }
+        else if(sQpcodeText.mid(C_MAC_STRING,1)=="1")
+        {
+            painter->drawText(0,0,"粉");
+        }
+        else if(sQpcodeText.mid(C_MAC_STRING,1)=="2")
+        {
+            painter->drawText(0,0,"黄");
+        }
+        else if(sQpcodeText.mid(C_MAC_STRING,1)=="4")
+        {
+            painter->drawText(0,0,"绿");
+        }
+        else
+        {
+            painter->drawText(0,0,"ERROR");
+        }
         //结束打印
         painter->end();
         point = NULL;
         //把mac地址保存到文件里面
-        QFile file("macAdress.txt");
+        //QFile file("macAdress.txt");
         if(file.open(QIODevice::WriteOnly|QIODevice::Append|QIODevice::Text))
         {
             QTextStream stream( &file );
